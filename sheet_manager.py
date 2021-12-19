@@ -51,6 +51,7 @@ class SheetManager:
             self.need_list = True
 
         self.current_sheet.cell(1, int(self.day) + 1).value = datetime.datetime.today().strftime('%-d/%-m')
+
         irc = TwitchIRC(self.name)
         self.mods = irc.get_mods()
         self.vips = irc.get_vips()
