@@ -1,0 +1,5 @@
+twitchAPI
+openpyxl
+ujson
+emoji
+tqdm
