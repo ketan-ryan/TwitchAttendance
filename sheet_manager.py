@@ -1,4 +1,5 @@
 from openpyxl.styles import PatternFill
+from openpyxl import utils
 from twitch_irc import TwitchIRC
 import datetime
 import openpyxl
@@ -8,6 +9,7 @@ import os
 class SheetManager:
     wb = None
     current_sheet = None
+    month_year = ''
     need_list = False
 
     day = datetime.datetime.today().strftime('%-d')
@@ -22,6 +24,7 @@ class SheetManager:
     orange = PatternFill(fgColor='ff5100', fill_type='solid')   # lurking
     blue = PatternFill(fgColor='0000ff', fill_type='solid')     # moderator
 
+    gh = None   # This abbreviation was accidental i swear
 
     def __init__(self, streamer_name) -> None:
         """
@@ -35,16 +38,16 @@ class SheetManager:
         self.wb = openpyxl.load_workbook(f'{streamer_name}.xlsx')
 
         self.current_sheet = self.wb.active
-        month_year = datetime.datetime.today().strftime('%m-%Y')
+        self.month_year = datetime.datetime.today().strftime('%m-%Y')
         sheet_exists = False
 
         for idx, s in enumerate(self.wb.sheetnames):
-            if s == month_year:
+            if s == self.month_year:
                 self.current_sheet = self.wb.worksheets[idx]
                 sheet_exists = True
 
         if not sheet_exists:
-            self.wb.active = self.wb.create_sheet(month_year)
+            self.wb.active = self.wb.create_sheet(self.month_year)
             self.current_sheet = self.wb.active
 
             self.current_sheet['A1'] = 'Chatter'
@@ -127,3 +130,7 @@ class SheetManager:
     def close(self):
         """Save workbook"""
         self.wb.save(f'{self.name}.xlsx')
+
+
+    def get_cell(self, row, col):
+        return self.current_sheet.cell(row, col)

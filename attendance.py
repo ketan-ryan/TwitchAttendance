@@ -120,7 +120,7 @@ class TwitchAttendance:
         try:
             while self.live_status is not None:
                 if self.second_elapsed():
-                    """Update the follower list"""
+                    """Update the viewer list"""
                     try:
                         with urllib.request.urlopen(f'https://tmi.twitch.tv/group/user/{self.channel_name}/chatters') as url:
                             url_data = url.read().decode('utf-8')
@@ -144,9 +144,11 @@ class TwitchAttendance:
                     if username in all_followers:
                         self.sm.update_attendance(username, 'Present')
                         all_followers.remove(username)
+
                 # Purely visual - print emojis in terminal
                 except AttributeError:
                     print(demojize(resp))
+
                 self.update_live_status()
         except Exception:
             traceback.print_exc()
